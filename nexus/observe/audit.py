@@ -8,7 +8,6 @@ import json
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -22,10 +21,10 @@ class AuditEntry(BaseModel):
     user_id: str | None = None
     action_type: str  # "query" | "create" | "update" | "delete" | "approve"
     connector: str
-    input_summary: str   # truncated for security
+    input_summary: str  # truncated for security
     output_summary: str  # truncated
     approval_status: str  # "auto_approved" | "human_approved" | "pending" | "rejected"
-    risk_level: str      # "low" | "medium" | "high"
+    risk_level: str  # "low" | "medium" | "high"
     duration_ms: float
 
     model_config = {"frozen": True}
@@ -161,6 +160,7 @@ class AuditStore:
                         self._entries.append(AuditEntry.model_validate_json(line))
         except Exception as exc:
             import logging
+
             logging.getLogger(__name__).warning("Could not load audit file: %s", exc)
 
     def clear(self) -> None:

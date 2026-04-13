@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass
-from typing import Any
 
 
 @dataclass
@@ -93,13 +92,13 @@ def format_score(response: str, expected_format: str) -> float:
             return 0.3 if response.strip().startswith(("{", "[")) else 0.0
 
     if fmt == "table":
-        lines = [l for l in response.splitlines() if l.strip()]
-        tabular = sum(1 for l in lines if "|" in l or "\t" in l)
+        lines = [ln for ln in response.splitlines() if ln.strip()]
+        tabular = sum(1 for ln in lines if "|" in ln or "\t" in ln)
         return round(tabular / max(len(lines), 1), 4)
 
     if fmt == "list":
         bullet_lines = re.findall(r"^\s*[-*•\d+\.]", response, re.MULTILINE)
-        lines = [l for l in response.splitlines() if l.strip()]
+        lines = [ln for ln in response.splitlines() if ln.strip()]
         return round(len(bullet_lines) / max(len(lines), 1), 4)
 
     if fmt == "text":
@@ -135,8 +134,8 @@ def _tokenise(text: str) -> list[str]:
 
 def _embedding_similarity(a: str, b: str) -> float:
     """Cosine similarity using sentence-transformers if available."""
-    from sentence_transformers import SentenceTransformer
     import numpy as np
+    from sentence_transformers import SentenceTransformer
 
     model = SentenceTransformer("all-MiniLM-L6-v2")
     vecs = model.encode([a, b], normalize_embeddings=True)

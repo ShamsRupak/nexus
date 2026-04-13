@@ -59,9 +59,7 @@ class ContextManager:
             conn = connectors.get(step.tool) or connectors.get("postgres")
             if conn:
                 try:
-                    result = await conn.execute(
-                        "nl_query", {"query": step.params["nl_query"]}
-                    )
+                    result = await conn.execute("nl_query", {"query": step.params["nl_query"]})
                     data = result.get("data", [])
                 except Exception as exc:
                     logger.warning("Connector query failed for step %s: %s", step.id, exc)
@@ -99,9 +97,7 @@ class ContextManager:
             raw = self._truncate_context(raw, self._max_tokens)
             token_est = self._estimate_tokens(raw)
             truncated = True
-            logger.info(
-                "Context for step %s truncated to ~%d tokens", step.id, token_est
-            )
+            logger.info("Context for step %s truncated to ~%d tokens", step.id, token_est)
 
         return StepContext(
             step_id=step.id,
@@ -121,6 +117,7 @@ class ContextManager:
         """Estimate token count from serialised context size."""
         try:
             import tiktoken
+
             enc = tiktoken.get_encoding("cl100k_base")
             text = str(context)
             return len(enc.encode(text))

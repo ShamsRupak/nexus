@@ -27,7 +27,7 @@ _executor = PlanExecutor()
 
 # Plan storage: pending + recently completed
 _pending_plans: dict[str, Plan] = {}
-_recent_plans: list[dict[str, Any]] = []   # last 100 entries
+_recent_plans: list[dict[str, Any]] = []  # last 100 entries
 _MAX_RECENT = 100
 
 _audit = get_audit_store()
@@ -59,7 +59,7 @@ class PromptResponse(BaseModel):
     status: str  # "completed" | "awaiting_approval"
     plan_id: str
     result: AgentResponse | None = None
-    steps: list[dict] | None = None   # returned when awaiting_approval
+    steps: list[dict] | None = None  # returned when awaiting_approval
     message: str | None = None
 
 
@@ -238,6 +238,7 @@ async def export_audit(fmt: str = Query(default="json")) -> dict:
 async def list_connectors() -> list[dict]:
     """Return registered connectors and their capabilities."""
     from nexus.connect.registry import get_registry
+
     return get_registry().list_connectors()
 
 

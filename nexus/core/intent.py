@@ -6,8 +6,8 @@ import json
 import logging
 import re
 
-from nexus.core.types import ClassifiedIntent, IntentType, RiskLevel
 from nexus.config import get_settings
+from nexus.core.types import ClassifiedIntent, IntentType, RiskLevel
 
 logger = logging.getLogger(__name__)
 

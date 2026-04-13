@@ -9,15 +9,14 @@ import pytest
 os.environ.setdefault("NEXUS_ENV", "test")
 os.environ.setdefault("OPENAI_API_KEY", "sk-test-placeholder")
 
-from nexus.eval.scorer import accuracy_score, completeness_score, format_score, score_response
 from nexus.eval.citation import CitationReport, verify_citations
 from nexus.eval.regression import (
+    CaseResult,
     CaseStatus,
     RegressionReport,
     RegressionRunner,
-    CaseResult,
 )
-
+from nexus.eval.scorer import accuracy_score, completeness_score, format_score, score_response
 
 # ===========================================================================
 # SCORER TESTS
@@ -281,6 +280,7 @@ async def test_regression_compare_detects_improvement():
 
 def test_regression_diff_net_change():
     from nexus.eval.regression import RegressionDiff
+
     diff = RegressionDiff(
         baseline_run_id="A",
         current_run_id="B",

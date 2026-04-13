@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import csv
 import json
 import os
-import csv
 from datetime import datetime, timedelta
 from io import StringIO
 
@@ -20,13 +20,15 @@ os.environ.setdefault("OPENAI_API_KEY", "sk-test-placeholder")
 
 
 def test_logger_returns_nexus_logger():
-    from nexus.observe.logger import get_logger, NexusLogger
+    from nexus.observe.logger import NexusLogger, get_logger
+
     log = get_logger("test_component")
     assert isinstance(log, NexusLogger)
 
 
 def test_logger_bind_trace_returns_new_instance():
-    from nexus.observe.logger import get_logger, NexusLogger
+    from nexus.observe.logger import NexusLogger, get_logger
+
     log = get_logger("test")
     bound = log.bind_trace("trace-abc-123")
     assert isinstance(bound, NexusLogger)
@@ -35,8 +37,9 @@ def test_logger_bind_trace_returns_new_instance():
 
 def test_logger_bind_trace_propagates_id():
     """After binding, calling info/warn/error should not raise."""
-    from nexus.observe.logger import get_logger
     import structlog.testing
+
+    from nexus.observe.logger import get_logger
 
     log = get_logger("test")
     bound = log.bind_trace("tid-xyz")
@@ -48,8 +51,9 @@ def test_logger_bind_trace_propagates_id():
 
 
 def test_logger_step_started_logs_step_id():
-    from nexus.observe.logger import get_logger
     import structlog.testing
+
+    from nexus.observe.logger import get_logger
 
     log = get_logger("executor")
     with structlog.testing.capture_logs() as cap:
@@ -60,8 +64,9 @@ def test_logger_step_started_logs_step_id():
 
 
 def test_logger_step_completed_includes_duration():
-    from nexus.observe.logger import get_logger
     import structlog.testing
+
+    from nexus.observe.logger import get_logger
 
     log = get_logger("executor")
     with structlog.testing.capture_logs() as cap:
@@ -71,8 +76,9 @@ def test_logger_step_completed_includes_duration():
 
 
 def test_logger_step_failed_logs_error():
-    from nexus.observe.logger import get_logger
     import structlog.testing
+
+    from nexus.observe.logger import get_logger
 
     log = get_logger("executor")
     with structlog.testing.capture_logs() as cap:
@@ -82,8 +88,9 @@ def test_logger_step_failed_logs_error():
 
 
 def test_logger_plan_lifecycle():
-    from nexus.observe.logger import get_logger
     import structlog.testing
+
+    from nexus.observe.logger import get_logger
 
     log = get_logger("planner")
     with structlog.testing.capture_logs() as cap:
@@ -96,6 +103,7 @@ def test_logger_plan_lifecycle():
 
 def test_new_trace_id_generates_uuid():
     from nexus.observe.logger import new_trace_id
+
     t1 = new_trace_id()
     t2 = new_trace_id()
     assert t1 != t2
@@ -109,7 +117,9 @@ def test_new_trace_id_generates_uuid():
 
 def _fresh_collector():
     from prometheus_client import CollectorRegistry
+
     from nexus.observe.metrics import MetricsCollector
+
     return MetricsCollector(registry=CollectorRegistry())
 
 
@@ -125,6 +135,7 @@ def test_metrics_record_prompt_increments_counter():
     mc.record_prompt("analysis", 2.1)
 
     from prometheus_client import generate_latest
+
     output = generate_latest(mc._registry).decode()
     assert "nexus_prompts_total" in output
 
@@ -135,6 +146,7 @@ def test_metrics_record_step_increments_steps_total():
     mc.record_step("postgres", "failed", 0.1)
 
     from prometheus_client import generate_latest
+
     output = generate_latest(mc._registry).decode()
     assert "nexus_steps_total" in output
 
@@ -144,6 +156,7 @@ def test_metrics_record_llm_call():
     mc.record_llm_call("gpt-4o-mini", "classify", 120, 40, 0.8)
 
     from prometheus_client import generate_latest
+
     output = generate_latest(mc._registry).decode()
     assert "nexus_llm_calls_total" in output
     assert "nexus_llm_tokens_used_total" in output
@@ -155,6 +168,7 @@ def test_metrics_record_connector_call():
     mc.record_connector_call("vector_store", "search", "success")
 
     from prometheus_client import generate_latest
+
     output = generate_latest(mc._registry).decode()
     assert "nexus_connector_calls_total" in output
 
@@ -165,6 +179,7 @@ def test_metrics_gauges_settable():
     mc.set_approval_pending(1)
 
     from prometheus_client import generate_latest
+
     output = generate_latest(mc._registry).decode()
     assert "nexus_active_plans" in output
     assert "nexus_approval_pending" in output
@@ -177,6 +192,7 @@ def test_metrics_gauges_settable():
 
 def _fresh_store():
     from nexus.observe.audit import AuditStore
+
     return AuditStore()
 
 

@@ -4,26 +4,26 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from pydantic import BaseModel, Field
 
 
-class IntentType(str, Enum):
-    QUERY = "query"        # Read-only data retrieval
-    ACTION = "action"      # Mutating operation (create, update, delete)
+class IntentType(StrEnum):
+    QUERY = "query"  # Read-only data retrieval
+    ACTION = "action"  # Mutating operation (create, update, delete)
     ANALYSIS = "analysis"  # Data analysis + insight generation
     WORKFLOW = "workflow"  # Multi-step automated process
 
 
-class RiskLevel(str, Enum):
+class RiskLevel(StrEnum):
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
 
 
-class StepStatus(str, Enum):
+class StepStatus(StrEnum):
     PENDING = "pending"
     RUNNING = "running"
     COMPLETED = "completed"

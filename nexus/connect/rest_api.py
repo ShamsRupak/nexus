@@ -6,7 +6,7 @@ import asyncio
 import logging
 import time
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 import httpx
@@ -16,7 +16,7 @@ from nexus.connect.registry import BaseConnector
 logger = logging.getLogger(__name__)
 
 
-class AuthType(str, Enum):
+class AuthType(StrEnum):
     NONE = "none"
     BEARER = "bearer"
     API_KEY = "api_key"
@@ -39,8 +39,8 @@ class _TokenBucket:
     """Simple token bucket for per-endpoint rate limiting."""
 
     def __init__(self, rate: float) -> None:
-        self._rate = rate          # tokens per second
-        self._tokens = rate        # start full
+        self._rate = rate  # tokens per second
+        self._tokens = rate  # start full
         self._last_refill = time.monotonic()
 
     async def acquire(self) -> None:
@@ -167,7 +167,11 @@ class RestApiConnector(BaseConnector):
                 if resp.status_code in _RETRIABLE:
                     backoff = 2**attempt
                     logger.warning(
-                        "HTTP %d from %s — retry %d in %ds", resp.status_code, url, attempt + 1, backoff
+                        "HTTP %d from %s — retry %d in %ds",
+                        resp.status_code,
+                        url,
+                        attempt + 1,
+                        backoff,
                     )
                     await asyncio.sleep(backoff)
                     continue
@@ -212,6 +216,4 @@ class RestApiConnector(BaseConnector):
             )
             return await self._client.send(req)
         async with httpx.AsyncClient(timeout=timeout) as client:
-            return await client.request(
-                method, url, headers=headers, json=payload, params=query
-            )
+            return await client.request(method, url, headers=headers, json=payload, params=query)

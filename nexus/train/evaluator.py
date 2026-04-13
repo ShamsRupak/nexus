@@ -4,10 +4,8 @@ from __future__ import annotations
 
 import re
 import time
-from typing import Any
 
 from pydantic import BaseModel, Field
-
 
 # ---------------------------------------------------------------------------
 # Report models
@@ -43,7 +41,7 @@ class BenchmarkReport(BaseModel):
         adapter_path: str,
         base_results: list[dict],
         finetuned_results: list[dict],
-    ) -> "BenchmarkReport":
+    ) -> BenchmarkReport:
         """Construct a BenchmarkReport from per-sample result dicts."""
         base_acc = _mean_score(base_results)
         ft_acc = _mean_score(finetuned_results)
@@ -73,9 +71,7 @@ class BenchmarkReport(BaseModel):
                 "base_accuracy": b_acc,
                 "finetuned_accuracy": f_acc,
                 "improvement_pct": round((f_acc - b_acc) * 100, 2),
-                "num_samples": max(
-                    len(base_by_cat.get(cat, [])), len(ft_by_cat.get(cat, []))
-                ),
+                "num_samples": max(len(base_by_cat.get(cat, [])), len(ft_by_cat.get(cat, []))),
             }
 
         base_lat = _mean_latency(base_results)
@@ -171,14 +167,16 @@ class ModelEvaluator:
             latency = (time.monotonic() - t0) * 1000
             generated = tokenizer.decode(out[0], skip_special_tokens=True)
             score = _jaccard(generated, tc.get("response", ""))
-            results.append({
-                "instruction": tc["instruction"],
-                "generated": generated,
-                "expected": tc.get("response", ""),
-                "score": score,
-                "latency_ms": round(latency, 2),
-                "category": tc.get("category", "general"),
-            })
+            results.append(
+                {
+                    "instruction": tc["instruction"],
+                    "generated": generated,
+                    "expected": tc.get("response", ""),
+                    "score": score,
+                    "latency_ms": round(latency, 2),
+                    "category": tc.get("category", "general"),
+                }
+            )
         return results
 
 
@@ -225,12 +223,14 @@ def _simulate_results(test_cases: list[dict], accuracy_boost: float = 0.0) -> li
             base_score += 0.05
         # Simulate some variance
         score = min(1.0, max(0.0, base_score + (i % 3 - 1) * 0.05))
-        results.append({
-            "instruction": instruction,
-            "generated": f"Simulated response for: {instruction[:50]}",
-            "expected": expected,
-            "score": round(score, 4),
-            "latency_ms": 5.0 + (i % 5) * 1.5,
-            "category": cat,
-        })
+        results.append(
+            {
+                "instruction": instruction,
+                "generated": f"Simulated response for: {instruction[:50]}",
+                "expected": expected,
+                "score": round(score, 4),
+                "latency_ms": 5.0 + (i % 5) * 1.5,
+                "category": cat,
+            }
+        )
     return results

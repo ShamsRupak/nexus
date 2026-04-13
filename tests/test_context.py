@@ -14,7 +14,6 @@ from nexus.connect.registry import BaseConnector, ConnectorRegistry
 from nexus.core.context import ContextManager, StepContext
 from nexus.core.types import IntentType, Plan, Step, StepStatus
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------

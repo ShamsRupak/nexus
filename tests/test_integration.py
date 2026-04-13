@@ -15,6 +15,7 @@ from starlette.testclient import TestClient
 @pytest.fixture(scope="module")
 def client():
     from nexus.api.main import app
+
     with TestClient(app, raise_server_exceptions=True) as c:
         yield c
 

@@ -34,9 +34,7 @@ def configure_logging(level: str = "INFO", force_json: bool = False) -> None:
 
     structlog.configure(
         processors=shared_processors + [renderer],
-        wrapper_class=structlog.make_filtering_bound_logger(
-            logging.getLevelName(level.upper())
-        ),
+        wrapper_class=structlog.make_filtering_bound_logger(logging.getLevelName(level.upper())),
         context_class=dict,
         logger_factory=structlog.PrintLoggerFactory(),
         cache_logger_on_first_use=True,
@@ -62,12 +60,12 @@ class NexusLogger:
         self._component = component
         self._log = _log or structlog.get_logger(component)
 
-    def bind_trace(self, trace_id: str) -> "NexusLogger":
+    def bind_trace(self, trace_id: str) -> NexusLogger:
         """Return a new NexusLogger bound to the given trace_id."""
         bound = self._log.bind(trace_id=trace_id, component=self._component)
         return NexusLogger(self._component, _log=bound)
 
-    def bind(self, **kwargs: Any) -> "NexusLogger":
+    def bind(self, **kwargs: Any) -> NexusLogger:
         """Return a new NexusLogger with extra fields bound."""
         bound = self._log.bind(**kwargs)
         return NexusLogger(self._component, _log=bound)

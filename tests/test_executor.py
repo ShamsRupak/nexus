@@ -18,7 +18,6 @@ from nexus.core.types import (
     StepStatus,
 )
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -67,9 +66,7 @@ def make_executor(tools: dict | None = None, timeout: int = 5) -> PlanExecutor:
 
 @pytest.mark.asyncio
 async def test_single_step_plan_executes_successfully():
-    steps = [
-        Step(id="s1", description="fetch data", tool="postgres", depends_on=[])
-    ]
+    steps = [Step(id="s1", description="fetch data", tool="postgres", depends_on=[])]
     plan = make_plan(steps)
     executor = make_executor({"postgres": stub_tool})
 
@@ -111,7 +108,7 @@ async def test_failed_step_cascades_to_dependents():
     plan = make_plan(steps)
     executor = make_executor({"bad": failing_tool, "good": stub_tool})
 
-    response = await executor.execute(plan)
+    await executor.execute(plan)
 
     assert plan.steps[0].status == StepStatus.FAILED
     assert plan.steps[1].status == StepStatus.FAILED
@@ -124,7 +121,7 @@ async def test_step_timeout_is_enforced():
     plan = make_plan(steps)
     executor = make_executor({"slow": slow_tool}, timeout=1)
 
-    response = await executor.execute(plan)
+    await executor.execute(plan)
 
     assert plan.steps[0].status == StepStatus.FAILED
     assert "timed out" in (plan.steps[0].error or "").lower()

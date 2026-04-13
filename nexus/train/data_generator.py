@@ -7,7 +7,6 @@ import json
 import re
 from pathlib import Path
 
-
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
@@ -80,21 +79,31 @@ class TrainingDataGenerator:
             dtype: str = col.get("type", "text")
 
             # Definition question
-            pairs.append({
-                "instruction": f"What does the '{name}' field represent in the {table} table?",
-                "response": f"The '{name}' field in the {table} table stores the {desc}.",
-            })
+            pairs.append(
+                {
+                    "instruction": f"What does the '{name}' field represent in the {table} table?",
+                    "response": f"The '{name}' field in the {table} table stores the {desc}.",
+                }
+            )
 
             if dtype in ("float", "int", "number"):
-                pairs.append({
-                    "instruction": f"What is the total {desc} across all {table}?",
-                    "response": f"To get the total {desc}, run: SELECT SUM({name}) FROM {table};",
-                })
+                pairs.append(
+                    {
+                        "instruction": f"What is the total {desc} across all {table}?",
+                        "response": (
+                            f"To get the total {desc}, run: SELECT SUM({name}) FROM {table};"
+                        ),
+                    }
+                )
                 entity = table.rstrip("s") if table.endswith("s") else table
-                pairs.append({
-                    "instruction": f"What is the average {desc} per {entity}?",
-                    "response": f"To get the average {desc}, run: SELECT AVG({name}) FROM {table};",
-                })
+                pairs.append(
+                    {
+                        "instruction": f"What is the average {desc} per {entity}?",
+                        "response": (
+                            f"To get the average {desc}, run: SELECT AVG({name}) FROM {table};"
+                        ),
+                    }
+                )
 
         return pairs
 
@@ -165,10 +174,12 @@ def _schema_pairs(
             if not value:
                 continue
             human_col = col.replace("_", " ")
-            pairs.append({
-                "instruction": f"What is the {human_col} of {entity_label}?",
-                "response": f"The {human_col} of {entity_label} is {value}.",
-            })
+            pairs.append(
+                {
+                    "instruction": f"What is the {human_col} of {entity_label}?",
+                    "response": f"The {human_col} of {entity_label} is {value}.",
+                }
+            )
 
     return pairs
 
@@ -211,10 +222,12 @@ def _aggregation_pairs(
     pairs: list[dict] = []
 
     # Total count
-    pairs.append({
-        "instruction": f"How many {entity_plural} are there in total?",
-        "response": f"There are {len(rows)} {entity_plural} in total.",
-    })
+    pairs.append(
+        {
+            "instruction": f"How many {entity_plural} are there in total?",
+            "response": f"There are {len(rows)} {entity_plural} in total.",
+        }
+    )
 
     for col in fieldnames:
         values = [r.get(col, "") for r in rows if r.get(col)]
@@ -224,38 +237,49 @@ def _aggregation_pairs(
         if numeric_vals and len(numeric_vals) >= len(values) * 0.6:
             total = sum(numeric_vals)
             avg = total / len(numeric_vals)
-            pairs.append({
-                "instruction": f"What is the total {human_col} across all {entity_plural}?",
-                "response": (
-                    f"The total {human_col} across all {len(numeric_vals)} {entity_plural} "
-                    f"is {total:,.2f}."
-                ),
-            })
-            pairs.append({
-                "instruction": f"What is the average {human_col} per {entity_plural.rstrip('s')}?",
-                "response": (
-                    f"The average {human_col} is {avg:,.2f}, "
-                    f"calculated across {len(numeric_vals)} {entity_plural}."
-                ),
-            })
+            pairs.append(
+                {
+                    "instruction": f"What is the total {human_col} across all {entity_plural}?",
+                    "response": (
+                        f"The total {human_col} across all {len(numeric_vals)} {entity_plural} "
+                        f"is {total:,.2f}."
+                    ),
+                }
+            )
+            pairs.append(
+                {
+                    "instruction": (
+                        f"What is the average {human_col} per {entity_plural.rstrip('s')}?"
+                    ),
+                    "response": (
+                        f"The average {human_col} is {avg:,.2f}, "
+                        f"calculated across {len(numeric_vals)} {entity_plural}."
+                    ),
+                }
+            )
         elif _is_categorical(values):
             freq = _value_counts(values)
             top_val, top_count = max(freq.items(), key=lambda kv: kv[1])
-            pairs.append({
-                "instruction": f"What is the most common {human_col} among {entity_plural}?",
-                "response": (
-                    f"The most common {human_col} is '{top_val}' with {top_count} {entity_plural}."
-                ),
-            })
-            for val, count in list(freq.items())[:5]:
-                pairs.append({
-                    "instruction": (
-                        f"How many {entity_plural} have {human_col} equal to '{val}'?"
-                    ),
+            pairs.append(
+                {
+                    "instruction": f"What is the most common {human_col} among {entity_plural}?",
                     "response": (
-                        f"There are {count} {entity_plural} with {human_col} equal to '{val}'."
+                        f"The most common {human_col} is '{top_val}' "
+                        f"with {top_count} {entity_plural}."
                     ),
-                })
+                }
+            )
+            for val, count in list(freq.items())[:5]:
+                pairs.append(
+                    {
+                        "instruction": (
+                            f"How many {entity_plural} have {human_col} equal to '{val}'?"
+                        ),
+                        "response": (
+                            f"There are {count} {entity_plural} with {human_col} equal to '{val}'."
+                        ),
+                    }
+                )
 
     return pairs
 
@@ -289,13 +313,15 @@ def _sql_pairs(
             freq = _value_counts(values)
             for val in list(freq.keys())[:3]:
                 human_col = col.replace("_", " ")
-                pairs.append({
-                    "instruction": (
-                        f"Write a SQL query to get all {entity_plural} "
-                        f"where {human_col} is '{val}'."
-                    ),
-                    "response": f"SELECT * FROM {table_name} WHERE {col} = '{val}';",
-                })
+                pairs.append(
+                    {
+                        "instruction": (
+                            f"Write a SQL query to get all {entity_plural} "
+                            f"where {human_col} is '{val}'."
+                        ),
+                        "response": f"SELECT * FROM {table_name} WHERE {col} = '{val}';",
+                    }
+                )
 
     return pairs
 
@@ -351,22 +377,26 @@ def _policy_pairs(text: str, topic: str) -> list[dict]:
         if not body.strip():
             continue
 
-        pairs.append({
-            "instruction": f"What is the {topic} policy on {title.lower()}?",
-            "response": _summarize(body, max_chars=400),
-        })
+        pairs.append(
+            {
+                "instruction": f"What is the {topic} policy on {title.lower()}?",
+                "response": _summarize(body, max_chars=400),
+            }
+        )
 
         # Bullet points
         bullets = re.findall(r"[-*•]\s+(.+)", body)
         for bullet in bullets[:4]:
             bullet = bullet.strip()
             if len(bullet) > 20:
-                pairs.append({
-                    "instruction": (
-                        f"In {topic}, what does the following mean: {bullet[:80]}?"
-                    ),
-                    "response": bullet,
-                })
+                pairs.append(
+                    {
+                        "instruction": (
+                            f"In {topic}, what does the following mean: {bullet[:80]}?"
+                        ),
+                        "response": bullet,
+                    }
+                )
 
         # Numeric sentences
         sentences = re.split(r"(?<=[.!?])\s+", body)

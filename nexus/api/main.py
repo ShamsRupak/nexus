@@ -8,7 +8,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 
-from nexus.api.routes import router, get_plan_store, get_audit_store_ref
+from nexus.api.routes import router
 from nexus.api.ws import ws_router
 from nexus.config import get_settings
 from nexus.observe.logger import configure_logging, get_logger
@@ -26,8 +26,6 @@ async def lifespan(app: FastAPI):
 
 
 def create_app() -> FastAPI:
-    settings = get_settings()
-
     app = FastAPI(
         title="Nexus",
         description="Enterprise AI agent orchestration platform",
@@ -55,7 +53,8 @@ def create_app() -> FastAPI:
     @app.get("/metrics", include_in_schema=False)
     async def metrics_endpoint() -> Response:
         try:
-            from prometheus_client import CONTENT_TYPE_LATEST, generate_latest, REGISTRY
+            from prometheus_client import CONTENT_TYPE_LATEST, REGISTRY, generate_latest
+
             data = generate_latest(REGISTRY)
             return Response(content=data, media_type=CONTENT_TYPE_LATEST)
         except Exception:

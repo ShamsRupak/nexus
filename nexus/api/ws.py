@@ -27,7 +27,7 @@ class ConnectionManager:
     """Tracks active WebSocket connections and provides broadcast helpers."""
 
     def __init__(self) -> None:
-        self._connections: dict[str, WebSocket] = {}   # trace_id → socket
+        self._connections: dict[str, WebSocket] = {}  # trace_id → socket
         self._all: list[WebSocket] = []
 
     async def connect(self, ws: WebSocket, trace_id: str | None = None) -> None:

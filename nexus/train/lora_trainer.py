@@ -77,8 +77,9 @@ class Dataset:
         return self._records[idx]
 
     @classmethod
-    def from_jsonl(cls, path: str) -> "Dataset":
+    def from_jsonl(cls, path: str) -> Dataset:
         import json
+
         records = []
         for line in Path(path).read_text(encoding="utf-8").splitlines():
             line = line.strip()
@@ -110,9 +111,7 @@ class LoRATrainer:
     """
 
     def __init__(self, model_name: str | None = None, config: TrainingConfig | None = None) -> None:
-        self._config = config or TrainingConfig(
-            model_name=model_name or "Qwen/Qwen2.5-3B-Instruct"
-        )
+        self._config = config or TrainingConfig(model_name=model_name or "Qwen/Qwen2.5-3B-Instruct")
         if model_name and config is None:
             self._config = TrainingConfig(model_name=model_name)
 
@@ -129,9 +128,7 @@ class LoRATrainer:
         p = Path(data_path)
         if not p.exists():
             raise FileNotFoundError(f"Training data not found: {data_path}")
-        return await asyncio.get_event_loop().run_in_executor(
-            None, Dataset.from_jsonl, data_path
-        )
+        return await asyncio.get_event_loop().run_in_executor(None, Dataset.from_jsonl, data_path)
 
     # ------------------------------------------------------------------
     # Training
@@ -159,8 +156,8 @@ class LoRATrainer:
     def _train_sync(self, dataset: Dataset, output_dir: str) -> TrainingResult:
         """Synchronous training logic — runs in a thread pool."""
         import torch  # noqa: F401  (triggers ImportError if unavailable)
+        from peft import LoraConfig, TaskType, get_peft_model
         from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments
-        from peft import LoraConfig, get_peft_model, TaskType
 
         cfg = self._config
         logger.info("Loading tokenizer for %s", cfg.model_name)
@@ -196,7 +193,7 @@ class LoRATrainer:
             report_to="none",
         )
 
-        from transformers import Trainer, DataCollatorForLanguageModeling
+        from transformers import DataCollatorForLanguageModeling, Trainer
 
         def tokenize(examples):
             texts = [
@@ -212,6 +209,7 @@ class LoRATrainer:
 
         # Convert our Dataset to a HF Dataset
         import datasets as hf_datasets
+
         hf_ds = hf_datasets.Dataset.from_list(list(dataset))
         tokenized = hf_ds.map(lambda ex: tokenize([ex]), batched=False)
 
@@ -246,7 +244,7 @@ class LoRATrainer:
         adapter_path.mkdir(parents=True, exist_ok=True)
         # Write a marker file so tests can assert the path exists
         (adapter_path / "adapter_config.json").write_text(
-            '{"dry_run": true, "r": ' + str(self._config.lora_r) + '}',
+            '{"dry_run": true, "r": ' + str(self._config.lora_r) + "}",
             encoding="utf-8",
         )
         return TrainingResult(
@@ -286,8 +284,8 @@ class LoRATrainer:
 
     def _evaluate_sync(self, model_path: str, test_data: list[dict]) -> EvalResult:
         import torch
-        from transformers import AutoModelForCausalLM, AutoTokenizer
         from peft import PeftModel
+        from transformers import AutoModelForCausalLM, AutoTokenizer
 
         tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
         base = AutoModelForCausalLM.from_pretrained(
@@ -312,7 +310,13 @@ class LoRATrainer:
             generated = tokenizer.decode(out[0], skip_special_tokens=True)
             score = _jaccard(generated, item.get("response", ""))
             scores.append(score)
-            outputs.append({"instruction": item["instruction"], "generated": generated, "score": score})
+            outputs.append(
+                {
+                    "instruction": item["instruction"],
+                    "generated": generated,
+                    "score": score,
+                }
+            )
 
         return EvalResult(
             model_path=model_path,
@@ -333,12 +337,14 @@ class LoRATrainer:
             generated = _simulate_response(instruction)
             score = _jaccard(generated, expected)
             scores.append(score)
-            outputs.append({
-                "instruction": instruction,
-                "generated": generated,
-                "expected": expected,
-                "score": score,
-            })
+            outputs.append(
+                {
+                    "instruction": instruction,
+                    "generated": generated,
+                    "expected": expected,
+                    "score": score,
+                }
+            )
         accuracy = round(sum(scores) / len(scores), 4) if scores else 0.0
         return EvalResult(
             model_path=model_path,
@@ -356,6 +362,7 @@ class LoRATrainer:
 
 def _tok(text: str) -> set[str]:
     import re
+
     return set(re.findall(r"\b[a-z0-9]+\b", text.lower()))
 
 

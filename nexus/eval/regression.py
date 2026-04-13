@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-import json
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from pydantic import BaseModel
@@ -14,7 +13,7 @@ from pydantic import BaseModel
 logger = logging.getLogger(__name__)
 
 
-class CaseStatus(str, Enum):
+class CaseStatus(StrEnum):
     PASSED = "passed"
     FAILED = "failed"
     ERROR = "error"
@@ -41,7 +40,7 @@ class RegressionReport(BaseModel):
     results: list[CaseResult] = []
 
     @classmethod
-    def from_results(cls, run_id: str, results: list[CaseResult]) -> "RegressionReport":
+    def from_results(cls, run_id: str, results: list[CaseResult]) -> RegressionReport:
         total = len(results)
         passed = sum(1 for r in results if r.status == CaseStatus.PASSED)
         failed = sum(1 for r in results if r.status == CaseStatus.FAILED)
@@ -63,8 +62,8 @@ class RegressionDiff:
 
     baseline_run_id: str
     current_run_id: str
-    regressed: list[str]    # case names that were passing and are now failing
-    improved: list[str]     # case names that were failing and are now passing
+    regressed: list[str]  # case names that were passing and are now failing
+    improved: list[str]  # case names that were failing and are now passing
     stable_pass: list[str]  # still passing
     stable_fail: list[str]  # still failing
 
@@ -110,10 +109,12 @@ class RegressionRunner:
 
     async def run_all(self) -> RegressionReport:
         """Run all registered cases and return a :class:`RegressionReport`."""
-        import uuid, time
+        import time
+        import uuid
+
+        from nexus.core.executor import ApprovalRequiredError, PlanExecutor
         from nexus.core.intent import IntentClassifier
         from nexus.core.planner import PlanDecomposer
-        from nexus.core.executor import PlanExecutor, ApprovalRequiredError
 
         run_id = str(uuid.uuid4())[:8]
         classifier = IntentClassifier()

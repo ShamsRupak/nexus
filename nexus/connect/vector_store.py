@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import hashlib
 import logging
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Callable
+from typing import Any
 
 from nexus.config import get_settings
 from nexus.connect.registry import BaseConnector
@@ -41,6 +42,7 @@ class SearchResult:
 def _default_embed(texts: list[str]) -> list[list[float]]:
     """Hash-based stub embedding — deterministic, no model required."""
     import struct
+
     result: list[list[float]] = []
     for text in texts:
         h = hashlib.sha256(text.encode()).digest()
@@ -205,6 +207,7 @@ class VectorStoreConnector(BaseConnector):
         """Split text into overlapping chunks using tiktoken if available."""
         try:
             import tiktoken
+
             enc = tiktoken.get_encoding("cl100k_base")
             tokens = enc.encode(text)
             chunks: list[str] = []
@@ -238,6 +241,7 @@ class VectorStoreConnector(BaseConnector):
     def _get_client(self):
         if self._client is None:
             import chromadb
+
             self._client = chromadb.HttpClient(host=self._host, port=self._port)
         return self._client
 
@@ -252,6 +256,7 @@ class VectorStoreConnector(BaseConnector):
             # Try sentence-transformers
             try:
                 from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
+
                 self._ef = SentenceTransformerEmbeddingFunction("all-MiniLM-L6-v2")
                 return self._ef
             except Exception:
@@ -274,7 +279,7 @@ def _make_chroma_ef(embed_fn: Callable[[list[str]], list[list[float]]]):
     there is no closure conflict with an outer 'self'.
     """
     try:
-        from chromadb import EmbeddingFunction, Documents, Embeddings
+        from chromadb import Documents, EmbeddingFunction, Embeddings
 
         class _WrappedEF(EmbeddingFunction):
             is_legacy = False

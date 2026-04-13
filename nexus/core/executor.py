@@ -161,16 +161,14 @@ class PlanExecutor:
                     timeout=timeout,
                 )
                 return result
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 last_error = f"Step timed out after {timeout}s"
                 step.error = last_error
                 logger.warning("Step %s timed out (attempt %d)", step.id, attempt + 1)
             except Exception as exc:
                 last_error = str(exc)
                 step.error = last_error
-                logger.warning(
-                    "Step %s failed (attempt %d): %s", step.id, attempt + 1, exc
-                )
+                logger.warning("Step %s failed (attempt %d): %s", step.id, attempt + 1, exc)
 
             if attempt < max_retries - 1:
                 backoff = 2**attempt

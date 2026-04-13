@@ -22,6 +22,7 @@ DATA_DIR = Path(__file__).parent.parent / "data" / "sample"
 
 def test_from_csv_deals_returns_pairs():
     from nexus.train.data_generator import TrainingDataGenerator
+
     gen = TrainingDataGenerator()
     pairs = gen.from_csv(str(DATA_DIR / "deals.csv"), "deals")
     assert len(pairs) > 0
@@ -35,6 +36,7 @@ def test_from_csv_deals_returns_pairs():
 
 def test_from_csv_customers_returns_pairs():
     from nexus.train.data_generator import TrainingDataGenerator
+
     gen = TrainingDataGenerator()
     pairs = gen.from_csv(str(DATA_DIR / "customers.csv"), "customers")
     assert len(pairs) > 10
@@ -42,6 +44,7 @@ def test_from_csv_customers_returns_pairs():
 
 def test_from_csv_generates_count_question():
     from nexus.train.data_generator import TrainingDataGenerator
+
     gen = TrainingDataGenerator()
     pairs = gen.from_csv(str(DATA_DIR / "deals.csv"), "deals")
     instructions = [p["instruction"].lower() for p in pairs]
@@ -51,6 +54,7 @@ def test_from_csv_generates_count_question():
 
 def test_from_csv_generates_sql_pairs():
     from nexus.train.data_generator import TrainingDataGenerator
+
     gen = TrainingDataGenerator()
     pairs = gen.from_csv(str(DATA_DIR / "deals.csv"), "deals")
     sql_pairs = [p for p in pairs if "SELECT" in p["response"]]
@@ -59,6 +63,7 @@ def test_from_csv_generates_sql_pairs():
 
 def test_from_csv_missing_file_raises():
     from nexus.train.data_generator import TrainingDataGenerator
+
     gen = TrainingDataGenerator()
     with pytest.raises(FileNotFoundError):
         gen.from_csv("/nonexistent/path/file.csv", "table")
@@ -66,6 +71,7 @@ def test_from_csv_missing_file_raises():
 
 def test_from_csv_empty_csv_returns_empty():
     from nexus.train.data_generator import TrainingDataGenerator
+
     gen = TrainingDataGenerator()
     with tempfile.NamedTemporaryFile(suffix=".csv", mode="w", delete=False) as f:
         f.write("id,name,value\n")  # header only, no rows
@@ -79,6 +85,7 @@ def test_from_csv_empty_csv_returns_empty():
 
 def test_from_text_policies_returns_pairs():
     from nexus.train.data_generator import TrainingDataGenerator
+
     gen = TrainingDataGenerator()
     pairs = gen.from_text(str(DATA_DIR / "policies.md"), "Nexus Platform Policies")
     assert len(pairs) > 0
@@ -89,6 +96,7 @@ def test_from_text_policies_returns_pairs():
 
 def test_from_text_produces_policy_questions():
     from nexus.train.data_generator import TrainingDataGenerator
+
     gen = TrainingDataGenerator()
     pairs = gen.from_text(str(DATA_DIR / "policies.md"), "Platform Policies")
     instructions = [p["instruction"].lower() for p in pairs]
@@ -97,6 +105,7 @@ def test_from_text_produces_policy_questions():
 
 def test_from_schema_returns_pairs():
     from nexus.train.data_generator import TrainingDataGenerator
+
     gen = TrainingDataGenerator()
     schema = {
         "table": "deals",
@@ -111,6 +120,7 @@ def test_from_schema_returns_pairs():
 
 def test_from_schema_includes_definition_question():
     from nexus.train.data_generator import TrainingDataGenerator
+
     gen = TrainingDataGenerator()
     schema = {
         "table": "customers",
@@ -124,6 +134,7 @@ def test_from_schema_includes_definition_question():
 
 def test_export_jsonl_writes_valid_file():
     from nexus.train.data_generator import TrainingDataGenerator
+
     gen = TrainingDataGenerator()
     pairs = [
         {"instruction": "How many deals exist?", "response": "There are 50 deals."},
@@ -144,10 +155,11 @@ def test_export_jsonl_writes_valid_file():
 
 def test_export_jsonl_skips_invalid_pairs():
     from nexus.train.data_generator import TrainingDataGenerator
+
     gen = TrainingDataGenerator()
     pairs = [
         {"instruction": "valid question?", "response": "valid answer"},
-        {"question": "old format", "answer": "old answer"},   # missing instruction/response keys
+        {"question": "old format", "answer": "old answer"},  # missing instruction/response keys
         {"instruction": "another valid?", "response": "another answer"},
     ]
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -158,6 +170,7 @@ def test_export_jsonl_skips_invalid_pairs():
 
 def test_generate_all_produces_200_plus_pairs():
     from nexus.train.data_generator import TrainingDataGenerator
+
     gen = TrainingDataGenerator()
     with tempfile.TemporaryDirectory() as tmpdir:
         out = Path(tmpdir) / "all_train.jsonl"
@@ -173,6 +186,7 @@ def test_generate_all_produces_200_plus_pairs():
 
 def test_training_config_defaults():
     from nexus.train.lora_trainer import TrainingConfig
+
     cfg = TrainingConfig()
     assert cfg.model_name == "Qwen/Qwen2.5-3B-Instruct"
     assert cfg.lora_r == 16
@@ -186,6 +200,7 @@ def test_training_config_defaults():
 
 def test_training_config_custom_values():
     from nexus.train.lora_trainer import TrainingConfig
+
     cfg = TrainingConfig(
         model_name="meta-llama/Llama-3.1-8B",
         lora_r=32,
@@ -200,6 +215,7 @@ def test_training_config_custom_values():
 
 def test_training_result_serializes():
     from nexus.train.lora_trainer import TrainingResult
+
     result = TrainingResult(
         model_name="Qwen/Qwen2.5-3B-Instruct",
         adapter_path="/models/adapter_v1",
@@ -218,6 +234,7 @@ def test_training_result_serializes():
 
 def test_lora_trainer_init_stores_config():
     from nexus.train.lora_trainer import LoRATrainer, TrainingConfig
+
     cfg = TrainingConfig(lora_r=32, epochs=5)
     trainer = LoRATrainer(config=cfg)
     assert trainer.config.lora_r == 32
@@ -226,6 +243,7 @@ def test_lora_trainer_init_stores_config():
 
 def test_lora_trainer_init_by_model_name():
     from nexus.train.lora_trainer import LoRATrainer
+
     trainer = LoRATrainer(model_name="Qwen/Qwen2.5-3B-Instruct")
     assert trainer.config.model_name == "Qwen/Qwen2.5-3B-Instruct"
 
@@ -233,13 +251,11 @@ def test_lora_trainer_init_by_model_name():
 @pytest.mark.asyncio
 async def test_prepare_dataset_loads_jsonl():
     from nexus.train.lora_trainer import LoRATrainer
+
     trainer = LoRATrainer()
     with tempfile.TemporaryDirectory() as tmpdir:
         data_file = Path(tmpdir) / "train.jsonl"
-        records = [
-            {"instruction": f"Question {i}?", "response": f"Answer {i}."}
-            for i in range(10)
-        ]
+        records = [{"instruction": f"Question {i}?", "response": f"Answer {i}."} for i in range(10)]
         data_file.write_text("\n".join(json.dumps(r) for r in records), encoding="utf-8")
         ds = await trainer.prepare_dataset(str(data_file))
         assert len(ds) == 10
@@ -250,6 +266,7 @@ async def test_prepare_dataset_loads_jsonl():
 async def test_train_dry_run_returns_result():
     """Train uses dry-run path when torch/transformers unavailable (always in CI)."""
     from nexus.train.lora_trainer import Dataset, LoRATrainer, TrainingConfig
+
     cfg = TrainingConfig(epochs=2)
     trainer = LoRATrainer(config=cfg)
     records = [{"instruction": f"Q{i}?", "response": f"A{i}."} for i in range(20)]
@@ -265,6 +282,7 @@ async def test_train_dry_run_returns_result():
 @pytest.mark.asyncio
 async def test_evaluate_keyword_returns_result():
     from nexus.train.lora_trainer import LoRATrainer
+
     trainer = LoRATrainer()
     test_data = [
         {"instruction": "How many deals?", "response": "There are 50 deals total."},
@@ -283,6 +301,7 @@ async def test_evaluate_keyword_returns_result():
 
 def test_benchmark_report_improvement_pct():
     from nexus.train.evaluator import BenchmarkReport
+
     report = BenchmarkReport(
         base_model="base",
         adapter_path="/adapter",
@@ -314,11 +333,20 @@ def test_benchmark_report_build_from_results():
 @pytest.mark.asyncio
 async def test_model_evaluator_benchmark_returns_report():
     from nexus.train.evaluator import ModelEvaluator
+
     evaluator = ModelEvaluator()
     test_cases = [
         {"instruction": "How many deals?", "response": "50 deals.", "category": "data_queries"},
-        {"instruction": "What is the refund policy?", "response": "30 days.", "category": "policy_questions"},
-        {"instruction": "Write SQL to count deals.", "response": "SELECT COUNT(*) FROM deals;", "category": "sql_generation"},
+        {
+            "instruction": "What is the refund policy?",
+            "response": "30 days.",
+            "category": "policy_questions",
+        },
+        {
+            "instruction": "Write SQL to count deals.",
+            "response": "SELECT COUNT(*) FROM deals;",
+            "category": "sql_generation",
+        },
     ]
     report = await evaluator.benchmark("base_model", "/mock/adapter", test_cases)
     assert report.num_test_cases == 3
@@ -330,6 +358,7 @@ async def test_model_evaluator_benchmark_returns_report():
 @pytest.mark.asyncio
 async def test_model_evaluator_empty_cases():
     from nexus.train.evaluator import ModelEvaluator
+
     evaluator = ModelEvaluator()
     report = await evaluator.benchmark("base_model", "/adapter", [])
     assert report.num_test_cases == 0

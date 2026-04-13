@@ -4,9 +4,7 @@ from __future__ import annotations
 
 import json
 import os
-import tempfile
 from pathlib import Path
-from typing import Any
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import httpx
@@ -15,12 +13,11 @@ import pytest
 os.environ.setdefault("NEXUS_ENV", "test")
 os.environ.setdefault("OPENAI_API_KEY", "sk-test-placeholder")
 
-from nexus.connect.registry import BaseConnector, ConnectorRegistry
+from nexus.connect.file_ingest import FileIngestConnector
 from nexus.connect.postgres import PostgresConnector
+from nexus.connect.registry import BaseConnector, ConnectorRegistry
 from nexus.connect.rest_api import AuthType, EndpointConfig, RestApiConnector
 from nexus.connect.vector_store import Document, VectorStoreConnector
-from nexus.connect.file_ingest import FileIngestConnector
-
 
 # ===========================================================================
 # REGISTRY TESTS
@@ -356,6 +353,7 @@ async def test_rest_api_timeout_config_used():
 def _make_vs() -> VectorStoreConnector:
     """Create a VectorStoreConnector backed by an in-memory ChromaDB."""
     import chromadb
+
     client = chromadb.EphemeralClient()
     return VectorStoreConnector(
         chroma_client=client,
@@ -441,7 +439,6 @@ async def test_vector_store_chunks_long_text():
     vs = _make_vs()
     # Text longer than one chunk window
     long_text = "This is a sentence about enterprise policy. " * 200
-    doc = Document(content=long_text, source="long.md")
     chunks = vs._chunk_text(long_text)
     assert len(chunks) > 1
 
@@ -461,7 +458,8 @@ def tmp_csv(tmp_path: Path) -> Path:
 @pytest.fixture
 def tmp_json(tmp_path: Path) -> Path:
     p = tmp_path / "test.json"
-    p.write_text(json.dumps([{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]), encoding="utf-8")
+    data = [{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]
+    p.write_text(json.dumps(data), encoding="utf-8")
     return p
 
 

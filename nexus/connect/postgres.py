@@ -16,9 +16,7 @@ logger = logging.getLogger(__name__)
 # Keyword NL-to-SQL patterns (LLM-free fallback)
 # ---------------------------------------------------------------------------
 
-_KW_SELECT_ALL = re.compile(
-    r"(?:show|list|get|fetch|display)\s+(?:all\s+)?(\w+)", re.IGNORECASE
-)
+_KW_SELECT_ALL = re.compile(r"(?:show|list|get|fetch|display)\s+(?:all\s+)?(\w+)", re.IGNORECASE)
 _KW_COUNT = re.compile(r"count\s+(?:of\s+)?(?:all\s+)?(\w+)", re.IGNORECASE)
 _KW_FIND_WHERE = re.compile(
     r"(?:find|show|get)\s+(\w+)\s+where\s+(\w+)\s*(?:=|is|equals?)\s*['\"]?(\w[\w\s]*?)['\"]?$",
@@ -32,16 +30,14 @@ _DANGEROUS_PATTERNS = re.compile(
 )
 
 # Mutating statement detection
-_MUTATING_STMT = re.compile(
-    r"^\s*(insert|update|delete|merge|replace|upsert)\b", re.IGNORECASE
-)
+_MUTATING_STMT = re.compile(r"^\s*(insert|update|delete|merge|replace|upsert)\b", re.IGNORECASE)
 
 # Known safe table names (populated from schema)
 _VALID_IDENTIFIER = re.compile(r"^[a-zA-Z_][a-zA-Z0-9_]*$")
 
 _SYSTEM_PROMPT = """\
-You are an expert SQL writer for PostgreSQL. Given a natural language query and the database schema, \
-write a single valid SELECT SQL statement. Rules:
+You are an expert SQL writer for PostgreSQL. Given a natural language query and the database \
+schema, write a single valid SELECT SQL statement. Rules:
 - Write only SELECT statements unless the action explicitly requires mutation.
 - Use parameterised placeholders ($1, $2, ...) for any user-provided values.
 - Return ONLY the SQL — no markdown, no explanation.
@@ -84,6 +80,7 @@ class PostgresConnector(BaseConnector):
             await self._ensure_engine()
             async with self._engine.connect() as conn:
                 from sqlalchemy import text
+
                 await conn.execute(text("SELECT 1"))
             return True
         except Exception:
@@ -165,6 +162,7 @@ class PostgresConnector(BaseConnector):
 
         if self._client is None:
             from openai import AsyncOpenAI
+
             self._client = AsyncOpenAI(
                 api_key=settings.openai_api_key,
                 base_url=settings.openai_base_url,
@@ -194,6 +192,7 @@ class PostgresConnector(BaseConnector):
             await self._ensure_engine()
             async with self._engine.connect() as conn:
                 from sqlalchemy import text
+
                 result = await conn.execute(
                     text(
                         """
@@ -241,6 +240,7 @@ class PostgresConnector(BaseConnector):
         await self._ensure_engine()
         async with self._engine.connect() as conn:
             from sqlalchemy import text
+
             result = await conn.execute(text(sql), bind_params or {})
             if result.returns_rows:
                 keys = list(result.keys())
@@ -250,4 +250,5 @@ class PostgresConnector(BaseConnector):
     async def _ensure_engine(self) -> None:
         if self._engine is None:
             from sqlalchemy.ext.asyncio import create_async_engine
+
             self._engine = create_async_engine(self._url, pool_size=5, max_overflow=10)

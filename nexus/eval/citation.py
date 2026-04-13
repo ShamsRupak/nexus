@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from typing import Any
 
 # Grounding threshold: a claim is considered grounded if its best-matching
 # source chunk scores >= this value.
@@ -15,8 +14,8 @@ _GROUNDED_THRESHOLD = 0.75
 class ClaimResult:
     claim: str
     grounded: bool
-    best_source: str    # text of the best-matching source chunk
-    score: float        # similarity score [0, 1]
+    best_source: str  # text of the best-matching source chunk
+    score: float  # similarity score [0, 1]
 
 
 @dataclass
@@ -51,10 +50,7 @@ def verify_citations(response: str, source_documents: list[str]) -> CitationRepo
         return CitationReport(total_claims=0, grounded=0, ungrounded=0, hallucination_rate=0.0)
 
     if not source_documents:
-        details = [
-            ClaimResult(claim=c, grounded=False, best_source="", score=0.0)
-            for c in claims
-        ]
+        details = [ClaimResult(claim=c, grounded=False, best_source="", score=0.0) for c in claims]
         return CitationReport(
             total_claims=len(claims),
             grounded=0,
@@ -97,8 +93,8 @@ def _extract_claims(text: str) -> list[str]:
 
 
 def _embedding_verify(claims: list[str], sources: list[str]) -> list[ClaimResult]:
-    from sentence_transformers import SentenceTransformer
     import numpy as np
+    from sentence_transformers import SentenceTransformer
 
     model = SentenceTransformer("all-MiniLM-L6-v2")
     all_texts = claims + sources
