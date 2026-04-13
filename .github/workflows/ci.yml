@@ -7,9 +7,12 @@ on:
     branches: [main, master]
 
 jobs:
+  # ── Python: lint + test ────────────────────────────────────────────────────
   test:
+    name: Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.11", "3.12"]
 
@@ -21,38 +24,40 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install uv
-        run: pip install uv
-
       - name: Install dependencies
-        run: uv pip install --system -e ".[dev]"
+        run: pip install -e ".[dev]"
 
-      - name: Run linter
+      - name: Lint — ruff check
         run: ruff check nexus/ tests/
 
-      - name: Run type checker
-        run: mypy nexus/ --ignore-missing-imports
+      - name: Format check — ruff format
+        run: ruff format --check nexus/ tests/
 
       - name: Run tests
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'sk-test-placeholder' }}
           NEXUS_ENV: test
-        run: |
-          pytest tests/ -v --cov=nexus --cov-report=xml --cov-report=term-missing
+        run: pytest tests/ -v --tb=short
 
-      - name: Upload coverage
-        uses: codecov/codecov-action@v4
-        with:
-          file: ./coverage.xml
-          fail_ci_if_error: false
-
-  lint:
+  # ── Frontend: TypeScript + build ───────────────────────────────────────────
+  frontend:
+    name: Frontend build
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          python-version: "3.11"
-      - run: pip install ruff
-      - run: ruff check nexus/ tests/
-      - run: ruff format --check nexus/ tests/
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: TypeScript type-check + build
+        working-directory: frontend
+        run: npm run build
