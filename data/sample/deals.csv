@@ -1,9 +1,51 @@
-id,company,contact,stage,amount,quarter,close_date,owner
-D001,Acme Corp,John Smith,Closed Won,125000,Q4,2024-12-15,Alice Johnson
-D002,Globex Inc,Jane Doe,Proposal,75000,Q1,2025-03-30,Bob Williams
-D003,Initech,Michael Scott,Discovery,45000,Q1,2025-02-28,Alice Johnson
-D004,Umbrella Corp,Sarah Connor,Closed Won,210000,Q4,2024-11-30,Carol Davis
-D005,Stark Industries,Tony Stark,Negotiation,500000,Q2,2025-06-15,Bob Williams
-D006,Wayne Enterprises,Bruce Wayne,Closed Won,320000,Q4,2024-12-31,Alice Johnson
-D007,Oscorp,Norman Osborn,Proposal,88000,Q2,2025-05-20,Carol Davis
-D008,LexCorp,Lex Luthor,Discovery,150000,Q3,2025-09-10,Bob Williams
+id,company,deal_value,stage,owner,created_date,close_date,probability,region
+1,Globex Inc,45000,Closed Lost,Marcus Rivera,2025-01-07,2025-09-09,0.0,US-East
+2,Initech,45000,Qualification,Sarah Chen,2025-06-23,2025-11-17,0.35,LatAm
+3,Umbrella Corp,25000,Negotiation,Marcus Rivera,2025-01-08,2025-07-24,0.7,US-East
+4,Stark Industries,25000,Closed Won,Lena Müller,2025-05-24,2025-08-20,1.0,APAC
+5,Wayne Enterprises,500000,Qualification,Sarah Chen,2025-05-31,2025-09-10,0.35,US-East
+6,Oscorp,350000,Closed Lost,Marcus Rivera,2025-03-29,2025-09-10,0.0,US-East
+7,LexCorp,45000,Proposal,Sarah Chen,2025-01-24,2025-10-06,0.5,EU-West
+8,Pied Piper,150000,Proposal,Lena Müller,2025-01-12,2025-10-26,0.5,US-West
+9,Hooli,45000,Negotiation,Lena Müller,2025-05-22,2025-09-14,0.7,EU-West
+10,Dunder Mifflin,100000,Closed Won,Sarah Chen,2025-06-30,2025-07-18,1.0,US-East
+11,Vandelay Industries,45000,Proposal,James O'Brien,2025-03-01,2025-07-26,0.5,EU-West
+12,Prestige Worldwide,200000,Negotiation,Priya Patel,2025-02-11,2025-10-03,0.7,US-East
+13,Bluth Company,150000,Closed Lost,Sarah Chen,2025-06-29,2025-12-22,0.0,LatAm
+14,Cyberdyne Systems,75000,Closed Lost,Marcus Rivera,2025-05-17,2025-09-01,0.0,APAC
+15,Weyland Corp,150000,Negotiation,Lena Müller,2025-06-13,2025-12-24,0.7,US-East
+16,Tyrell Corp,200000,Closed Lost,Sarah Chen,2025-01-15,2025-08-28,0.0,EU-West
+17,Rekall Inc,150000,Negotiation,Lena Müller,2025-01-17,2025-08-24,0.7,EU-West
+18,Soylent Corp,500000,Qualification,James O'Brien,2025-04-12,2025-12-12,0.35,US-East
+19,Megacorp,75000,Proposal,Lena Müller,2025-03-05,2025-11-21,0.5,EU-West
+20,TechFlow Inc,350000,Closed Lost,Priya Patel,2025-05-30,2025-10-11,0.0,US-East
+21,DataSoft,500000,Qualification,Sarah Chen,2025-01-24,2025-07-13,0.35,US-East
+22,CloudNine,75000,Closed Lost,Lena Müller,2025-06-24,2025-10-17,0.0,US-West
+23,NexGen AI,350000,Negotiation,Lena Müller,2025-06-02,2025-10-28,0.7,EU-West
+24,QuantumLeap,25000,Closed Won,Sarah Chen,2025-06-24,2026-01-01,1.0,LatAm
+25,ByteForge,200000,Proposal,James O'Brien,2025-01-29,2025-09-14,0.5,US-East
+26,SkyNet Systems,25000,Negotiation,Marcus Rivera,2025-03-09,2025-11-06,0.7,LatAm
+27,NovaTech,150000,Discovery,Lena Müller,2025-06-13,2025-11-07,0.2,US-East
+28,AlphaWave,200000,Qualification,Lena Müller,2025-02-11,2025-11-16,0.35,US-West
+29,ZenithIO,200000,Closed Won,Sarah Chen,2025-05-06,2025-07-05,1.0,EU-West
+30,Acme Corp,100000,Proposal,Lena Müller,2025-01-15,2025-08-31,0.5,US-West
+31,Globex Inc,500000,Discovery,Marcus Rivera,2025-01-18,2025-11-14,0.2,US-East
+32,Initech,500000,Closed Lost,Priya Patel,2025-05-21,2025-08-12,0.0,LatAm
+33,Umbrella Corp,350000,Closed Won,Marcus Rivera,2025-02-24,2025-11-16,1.0,EU-West
+34,Stark Industries,200000,Negotiation,James O'Brien,2025-04-23,2025-11-10,0.7,US-West
+35,Wayne Enterprises,100000,Qualification,Sarah Chen,2025-01-17,2025-09-25,0.35,LatAm
+36,Oscorp,100000,Closed Won,Sarah Chen,2025-05-31,2025-08-26,1.0,US-West
+37,LexCorp,25000,Closed Lost,Sarah Chen,2025-02-28,2025-07-18,0.0,EU-West
+38,Pied Piper,100000,Discovery,James O'Brien,2025-03-13,2025-12-19,0.2,US-East
+39,Hooli,75000,Closed Won,James O'Brien,2025-05-27,2025-11-25,1.0,US-East
+40,Dunder Mifflin,350000,Negotiation,Sarah Chen,2025-02-18,2025-07-25,0.7,APAC
+41,Vandelay Industries,350000,Proposal,Sarah Chen,2025-04-16,2025-10-28,0.5,US-West
+42,Prestige Worldwide,350000,Discovery,Marcus Rivera,2025-03-28,2025-07-28,0.2,US-East
+43,Bluth Company,500000,Qualification,Marcus Rivera,2025-02-05,2025-10-17,0.35,EU-West
+44,Cyberdyne Systems,100000,Negotiation,Lena Müller,2025-01-20,2025-10-22,0.7,US-West
+45,Weyland Corp,25000,Discovery,Marcus Rivera,2025-01-24,2025-08-30,0.2,APAC
+46,Tyrell Corp,500000,Negotiation,Sarah Chen,2025-02-24,2025-10-11,0.7,US-East
+47,Rekall Inc,25000,Negotiation,James O'Brien,2025-04-10,2025-09-06,0.7,EU-West
+48,Soylent Corp,500000,Negotiation,Priya Patel,2025-02-09,2025-08-18,0.7,US-East
+49,Megacorp,25000,Discovery,Sarah Chen,2025-03-22,2025-07-15,0.2,LatAm
+50,TechFlow Inc,75000,Negotiation,Sarah Chen,2025-01-15,2025-11-08,0.7,US-East

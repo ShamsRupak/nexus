@@ -1,9 +1,101 @@
-id,customer_id,subject,priority,status,created_at,resolved_at,agent
-T001,C001,API rate limit exceeded,High,Resolved,2024-11-01,2024-11-02,Support Bot
-T002,C005,SSO integration failing,Critical,Resolved,2024-11-15,2024-11-15,Alice Johnson
-T003,C002,Billing discrepancy,Medium,Open,2024-12-01,,Bob Williams
-T004,C004,Data export not working,High,In Progress,2024-12-10,,Alice Johnson
-T005,C006,Feature request: webhooks,Low,Backlog,2024-12-15,,
-T006,C003,Cannot login after password reset,High,Resolved,2024-10-20,2024-10-21,Support Bot
-T007,C007,Onboarding help needed,Low,Resolved,2024-12-18,2024-12-19,Carol Davis
-T008,C008,Trial extension request,Medium,Open,2024-12-20,,Bob Williams
+id,customer_id,subject,priority,status,category,created_at,resolved_at,satisfaction,assigned_agent
+1,15,SSO integration failing,critical,in_progress,security,2025-09-23,,,Alice Johnson
+2,18,Contract renewal question,low,resolved,onboarding,2025-08-26,2025-12-09,5,Carol Davis
+3,24,Dashboard loads slowly,critical,closed,feature_request,2025-10-08,2025-08-18,3,Bob Williams
+4,21,Onboarding help needed,medium,closed,onboarding,2025-05-22,2025-09-25,4,Carol Davis
+5,11,2FA setup issue,low,resolved,technical,2025-05-01,2025-05-21,4,Alice Johnson
+6,23,Performance degradation,medium,in_progress,technical,2025-03-20,,,Carol Davis
+7,14,SSO integration failing,critical,in_progress,billing,2025-08-27,,,Carol Davis
+8,28,API key rotation help,critical,closed,feature_request,2025-10-27,2025-12-24,3,Carol Davis
+9,18,2FA setup issue,low,closed,security,2025-06-02,2025-07-20,4,Alice Johnson
+10,16,API rate limiting errors,critical,in_progress,feature_request,2025-08-12,,,Bob Williams
+11,18,API rate limiting errors,critical,resolved,feature_request,2025-08-28,2025-03-08,5,
+12,5,CSV import failing,low,open,billing,2025-08-08,,,Support Bot
+13,11,Password reset loop,high,resolved,onboarding,2025-04-19,2025-08-22,4,Carol Davis
+14,18,SSO integration failing,high,closed,onboarding,2025-08-29,2025-01-11,5,Alice Johnson
+15,7,API rate limiting errors,low,closed,security,2025-01-21,2025-01-17,3,Alice Johnson
+16,19,Performance degradation,medium,open,feature_request,2025-02-28,,,Bob Williams
+17,25,Cannot login,high,in_progress,onboarding,2025-02-28,,,Support Bot
+18,13,Performance degradation,low,closed,technical,2025-10-22,2025-12-14,4,
+19,28,Contract renewal question,medium,open,technical,2025-06-04,,,
+20,22,Mobile app crash,low,in_progress,technical,2025-08-08,,,
+21,27,Dashboard loads slowly,high,open,technical,2025-08-04,,,Carol Davis
+22,14,Cannot login,high,resolved,security,2025-08-24,2025-12-30,3,Bob Williams
+23,27,Billing discrepancy,critical,resolved,onboarding,2025-05-18,2025-06-16,3,Carol Davis
+24,13,Custom report broken,medium,closed,technical,2025-10-19,2025-11-10,5,Carol Davis
+25,12,Trial extension request,high,in_progress,onboarding,2025-04-19,,,Bob Williams
+26,8,Webhook not firing,high,resolved,feature_request,2025-09-22,2025-04-09,3,
+27,3,GDPR data deletion request,medium,resolved,billing,2025-09-09,2025-08-19,3,Carol Davis
+28,12,Dashboard loads slowly,medium,in_progress,security,2025-10-25,,,
+29,23,CSV import failing,high,resolved,onboarding,2025-10-09,2025-06-20,4,Bob Williams
+30,11,Data export not working,high,in_progress,security,2025-04-09,,,Alice Johnson
+31,9,API key rotation help,medium,in_progress,security,2025-09-05,,,
+32,12,Cannot login,high,closed,onboarding,2025-04-10,2025-06-02,3,Support Bot
+33,18,GDPR data deletion request,medium,in_progress,billing,2025-01-28,,,Carol Davis
+34,16,CSV import failing,low,closed,onboarding,2025-10-21,2025-05-27,4,Alice Johnson
+35,4,Billing discrepancy,low,in_progress,feature_request,2025-09-02,,,Carol Davis
+36,26,API key rotation help,low,resolved,onboarding,2025-01-28,2025-03-20,3,Support Bot
+37,20,Contract renewal question,medium,open,security,2025-08-02,,,Alice Johnson
+38,14,GDPR data deletion request,critical,resolved,security,2025-08-15,2025-06-03,5,
+39,7,Trial extension request,low,resolved,technical,2025-02-20,2025-04-18,5,Alice Johnson
+40,6,API rate limiting errors,medium,in_progress,feature_request,2025-02-08,,,Carol Davis
+41,10,GDPR data deletion request,critical,in_progress,feature_request,2025-04-29,,,Support Bot
+42,18,Onboarding help needed,medium,closed,billing,2025-04-12,2025-08-07,3,Bob Williams
+43,26,GDPR data deletion request,medium,open,security,2025-03-26,,,
+44,23,Password reset loop,high,resolved,onboarding,2025-08-28,2025-12-20,4,
+45,11,Contract renewal question,critical,resolved,onboarding,2025-01-21,2025-08-11,5,Support Bot
+46,19,API rate limiting errors,low,in_progress,onboarding,2025-10-22,,,
+47,21,CSV import failing,low,closed,onboarding,2025-03-31,2025-08-30,5,Alice Johnson
+48,12,Webhook not firing,critical,resolved,onboarding,2025-09-09,2025-02-17,4,Bob Williams
+49,16,GDPR data deletion request,low,closed,feature_request,2025-06-18,2025-07-31,5,
+50,4,Password reset loop,low,resolved,security,2025-06-11,2025-05-11,4,Support Bot
+51,20,Dashboard loads slowly,critical,resolved,feature_request,2025-04-07,2025-09-24,4,Support Bot
+52,30,GDPR data deletion request,medium,in_progress,feature_request,2025-03-09,,,Carol Davis
+53,23,Cannot login,low,open,onboarding,2025-05-03,,,
+54,15,Data export not working,low,resolved,billing,2025-02-17,2025-04-27,3,Carol Davis
+55,16,Onboarding help needed,high,resolved,feature_request,2025-05-20,2025-08-02,4,
+56,9,Webhook not firing,medium,resolved,onboarding,2025-09-18,2025-03-12,3,
+57,19,Dashboard loads slowly,high,closed,billing,2025-05-25,2025-06-03,5,Carol Davis
+58,25,2FA setup issue,critical,in_progress,feature_request,2025-10-10,,,Carol Davis
+59,8,Webhook not firing,high,closed,technical,2025-05-03,2025-10-21,4,Bob Williams
+60,26,Feature request: webhooks,critical,resolved,feature_request,2025-07-15,2025-07-18,5,Support Bot
+61,4,Audit log missing events,medium,resolved,feature_request,2025-06-19,2025-02-22,4,Support Bot
+62,26,Trial extension request,medium,resolved,onboarding,2025-03-21,2025-02-09,4,
+63,13,Custom report broken,critical,resolved,feature_request,2025-06-18,2025-12-13,5,
+64,30,GDPR data deletion request,low,resolved,billing,2025-05-01,2025-11-21,5,Support Bot
+65,23,GDPR data deletion request,critical,closed,technical,2025-02-21,2025-08-17,3,Support Bot
+66,14,Feature request: webhooks,high,closed,billing,2025-05-31,2025-07-04,4,
+67,3,Contract renewal question,critical,resolved,feature_request,2025-04-03,2025-03-30,3,
+68,15,Trial extension request,medium,resolved,feature_request,2025-10-26,2025-03-16,3,Bob Williams
+69,18,Cannot login,low,closed,technical,2025-08-27,2025-05-29,5,Carol Davis
+70,23,Trial extension request,high,closed,feature_request,2025-06-03,2025-11-25,4,Bob Williams
+71,13,API key rotation help,medium,closed,onboarding,2025-09-05,2025-02-25,3,
+72,13,Trial extension request,high,closed,technical,2025-06-01,2025-01-13,5,
+73,20,Mobile app crash,low,closed,billing,2025-09-12,2025-05-28,3,Alice Johnson
+74,29,SSO integration failing,high,resolved,onboarding,2025-03-12,2025-11-19,3,Carol Davis
+75,11,Webhook not firing,low,resolved,billing,2025-03-09,2025-02-17,4,Alice Johnson
+76,30,Trial extension request,medium,closed,billing,2025-07-07,2025-09-30,5,Bob Williams
+77,15,Billing discrepancy,critical,closed,billing,2025-06-01,2025-06-24,3,Alice Johnson
+78,26,Password reset loop,critical,closed,technical,2025-10-13,2025-07-08,3,Bob Williams
+79,27,Mobile app crash,low,resolved,technical,2025-05-15,2025-10-28,4,Alice Johnson
+80,11,Contract renewal question,critical,open,billing,2025-10-15,,,Support Bot
+81,4,Feature request: webhooks,critical,closed,technical,2025-06-04,2025-11-30,4,Support Bot
+82,29,2FA setup issue,high,closed,billing,2025-03-01,2025-02-20,3,Carol Davis
+83,24,Feature request: webhooks,critical,resolved,feature_request,2025-10-04,2025-08-04,5,Support Bot
+84,12,Performance degradation,critical,resolved,feature_request,2025-05-24,2025-01-18,5,Carol Davis
+85,18,Mobile app crash,medium,closed,technical,2025-02-20,2025-12-19,4,Carol Davis
+86,28,CSV import failing,high,in_progress,technical,2025-03-04,,,Alice Johnson
+87,8,Feature request: webhooks,low,open,security,2025-06-20,,,Alice Johnson
+88,7,Onboarding help needed,low,closed,onboarding,2025-10-11,2025-04-18,5,Alice Johnson
+89,5,2FA setup issue,low,in_progress,onboarding,2025-03-16,,,Alice Johnson
+90,12,Onboarding help needed,low,resolved,security,2025-01-14,2025-03-10,3,Bob Williams
+91,5,Webhook not firing,low,in_progress,security,2025-01-27,,,Support Bot
+92,4,CSV import failing,low,resolved,security,2025-07-05,2025-09-21,5,Alice Johnson
+93,21,API rate limiting errors,low,resolved,technical,2025-09-24,2025-06-05,4,Carol Davis
+94,30,CSV import failing,critical,resolved,technical,2025-02-25,2025-09-10,5,Support Bot
+95,20,API key rotation help,high,resolved,security,2025-02-03,2025-03-07,4,Bob Williams
+96,17,Contract renewal question,critical,closed,feature_request,2025-09-29,2025-06-01,4,Support Bot
+97,15,Onboarding help needed,low,closed,feature_request,2025-10-10,2025-04-22,4,Bob Williams
+98,11,Trial extension request,critical,resolved,onboarding,2025-02-18,2025-06-11,4,Alice Johnson
+99,3,Webhook not firing,critical,open,technical,2025-02-13,,,Bob Williams
+100,11,Data export not working,medium,resolved,feature_request,2025-10-28,2025-10-16,5,Bob Williams

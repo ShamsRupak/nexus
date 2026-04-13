@@ -1,9 +1,31 @@
-id,name,email,company,plan,mrr,created_at,status
-C001,John Smith,john.smith@acme.com,Acme Corp,Enterprise,10416,2023-01-15,active
-C002,Jane Doe,jane.doe@globex.com,Globex Inc,Pro,625,2023-03-22,active
-C003,Michael Scott,mscott@initech.com,Initech,Starter,125,2023-06-01,churned
-C004,Sarah Connor,sconnor@umbrella.com,Umbrella Corp,Enterprise,17500,2022-11-10,active
-C005,Tony Stark,tstark@stark.com,Stark Industries,Enterprise,41666,2022-05-01,active
-C006,Bruce Wayne,bwayne@wayne.com,Wayne Enterprises,Enterprise,26666,2023-02-14,active
-C007,Norman Osborn,nosborn@oscorp.com,Oscorp,Pro,733,2024-01-08,active
-C008,Lex Luthor,lluthor@lexcorp.com,LexCorp,Pro,1250,2024-03-15,trial
+id,name,industry,plan,mrr,signup_date,health_score,region,status
+1,Globex Inc,Media,Starter,252,2025-05-01,0.64,LatAm,active
+2,Initech,SaaS,Enterprise,45591,2025-08-03,0.79,LatAm,trial
+3,Umbrella Corp,Logistics,Pro,709,2025-06-10,0.54,APAC,active
+4,Stark Industries,HealthTech,Enterprise,34964,2025-02-07,0.41,LatAm,trial
+5,Wayne Enterprises,Manufacturing,Starter,118,2025-05-16,0.48,EU-West,active
+6,Oscorp,Retail,Starter,194,2025-10-06,0.82,LatAm,trial
+7,LexCorp,HealthTech,Starter,270,2025-02-23,0.96,US-East,active
+8,Pied Piper,FinTech,Starter,127,2025-05-20,0.57,US-East,active
+9,Hooli,Manufacturing,Starter,275,2025-09-08,0.55,US-West,active
+10,Dunder Mifflin,SaaS,Enterprise,23132,2025-01-02,0.6,US-East,active
+11,Vandelay Industries,Logistics,Starter,289,2025-08-07,0.74,US-West,active
+12,Prestige Worldwide,Media,Enterprise,7361,2025-07-09,0.75,US-East,churned
+13,Bluth Company,Media,Starter,110,2025-01-21,0.94,US-East,active
+14,Cyberdyne Systems,Media,Enterprise,41692,2025-07-28,0.98,US-East,active
+15,Weyland Corp,SaaS,Starter,145,2025-04-02,0.84,EU-West,churned
+16,Tyrell Corp,HealthTech,Enterprise,21263,2025-03-23,0.87,US-West,churned
+17,Rekall Inc,Media,Starter,220,2025-08-24,0.61,US-East,active
+18,Soylent Corp,HealthTech,Starter,268,2025-05-23,0.92,EU-West,active
+19,Megacorp,Media,Enterprise,49532,2025-10-02,0.6,US-West,active
+20,TechFlow Inc,SaaS,Pro,1094,2025-02-25,0.76,EU-West,active
+21,DataSoft,Retail,Pro,1023,2025-10-23,0.51,US-West,churned
+22,CloudNine,Logistics,Starter,233,2025-04-11,0.62,US-West,active
+23,NexGen AI,Logistics,Enterprise,13167,2025-06-03,0.7,APAC,active
+24,QuantumLeap,FinTech,Pro,802,2025-04-09,0.65,APAC,active
+25,ByteForge,Manufacturing,Enterprise,31612,2025-01-01,0.58,US-East,churned
+26,SkyNet Systems,Retail,Enterprise,26118,2025-08-15,0.67,US-East,trial
+27,NovaTech,SaaS,Pro,673,2025-05-26,0.71,LatAm,active
+28,AlphaWave,HealthTech,Starter,292,2025-04-26,0.88,US-East,active
+29,ZenithIO,Media,Starter,162,2025-02-07,0.67,LatAm,active
+30,Acme Corp,Retail,Enterprise,37399,2025-05-05,0.49,US-West,active
