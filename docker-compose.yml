@@ -1,42 +1,87 @@
 version: "3.9"
 
+networks:
+  nexus:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  chroma_data:
+  prometheus_data:
+  grafana_data:
+
 services:
+
+  # ── Backend ────────────────────────────────────────────────────────────────
   backend:
     build: .
     ports:
       - "8080:8080"
     environment:
-      - POSTGRES_URL=postgresql+asyncpg://nexus:nexus@postgres:5432/nexus
-      - CHROMA_HOST=chromadb
-      - CHROMA_PORT=8000
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - NEXUS_ENV=${NEXUS_ENV:-production}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - LLM_MODEL=${LLM_MODEL:-gpt-4o-mini}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - POSTGRES_URL=postgresql+asyncpg://nexus:${POSTGRES_PASSWORD:-nexus}@postgres:5432/nexus
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
     depends_on:
       postgres:
         condition: service_healthy
       chromadb:
-        condition: service_started
+        condition: service_healthy
     volumes:
-      - ./data:/app/data
+      - ./data:/app/data:ro
+    networks:
+      - nexus
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 20s
+      retries: 3
 
+  # ── Frontend ───────────────────────────────────────────────────────────────
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - nexus
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+  # ── PostgreSQL ─────────────────────────────────────────────────────────────
   postgres:
     image: postgres:16-alpine
     environment:
       POSTGRES_USER: nexus
-      POSTGRES_PASSWORD: nexus
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nexus}
       POSTGRES_DB: nexus
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - nexus
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U nexus"]
+      test: ["CMD-SHELL", "pg_isready -U nexus -d nexus"]
       interval: 5s
       timeout: 5s
+      start_period: 10s
       retries: 10
 
+  # ── ChromaDB ───────────────────────────────────────────────────────────────
   chromadb:
     image: chromadb/chroma:latest
     ports:
@@ -45,32 +90,64 @@ services:
       - chroma_data:/chroma/chroma
     environment:
       - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+    networks:
+      - nexus
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 10s
+      timeout: 5s
+      start_period: 15s
+      retries: 5
 
+  # ── Prometheus ─────────────────────────────────────────────────────────────
   prometheus:
     image: prom/prometheus:latest
     ports:
       - "9090:9090"
     volumes:
-      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./infra/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=15d"
+      - "--web.enable-lifecycle"
+    networks:
+      - nexus
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:9090/-/healthy"]
+      interval: 15s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
 
+  # ── Grafana ────────────────────────────────────────────────────────────────
   grafana:
     image: grafana/grafana:latest
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=nexus
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-nexus}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/etc/grafana/dashboards/nexus.json
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./observability/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./infra/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./infra/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./infra/grafana/dashboards:/etc/grafana/dashboards:ro
     depends_on:
-      - prometheus
-
-volumes:
-  postgres_data:
-  chroma_data:
-  prometheus_data:
-  grafana_data:
+      prometheus:
+        condition: service_healthy
+    networks:
+      - nexus
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      interval: 15s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
