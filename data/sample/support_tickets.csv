@@ -1,0 +1,9 @@
+id,customer_id,subject,priority,status,created_at,resolved_at,agent
+T001,C001,API rate limit exceeded,High,Resolved,2024-11-01,2024-11-02,Support Bot
+T002,C005,SSO integration failing,Critical,Resolved,2024-11-15,2024-11-15,Alice Johnson
+T003,C002,Billing discrepancy,Medium,Open,2024-12-01,,Bob Williams
+T004,C004,Data export not working,High,In Progress,2024-12-10,,Alice Johnson
+T005,C006,Feature request: webhooks,Low,Backlog,2024-12-15,,
+T006,C003,Cannot login after password reset,High,Resolved,2024-10-20,2024-10-21,Support Bot
+T007,C007,Onboarding help needed,Low,Resolved,2024-12-18,2024-12-19,Carol Davis
+T008,C008,Trial extension request,Medium,Open,2024-12-20,,Bob Williams

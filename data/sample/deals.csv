@@ -1,0 +1,9 @@
+id,company,contact,stage,amount,quarter,close_date,owner
+D001,Acme Corp,John Smith,Closed Won,125000,Q4,2024-12-15,Alice Johnson
+D002,Globex Inc,Jane Doe,Proposal,75000,Q1,2025-03-30,Bob Williams
+D003,Initech,Michael Scott,Discovery,45000,Q1,2025-02-28,Alice Johnson
+D004,Umbrella Corp,Sarah Connor,Closed Won,210000,Q4,2024-11-30,Carol Davis
+D005,Stark Industries,Tony Stark,Negotiation,500000,Q2,2025-06-15,Bob Williams
+D006,Wayne Enterprises,Bruce Wayne,Closed Won,320000,Q4,2024-12-31,Alice Johnson
+D007,Oscorp,Norman Osborn,Proposal,88000,Q2,2025-05-20,Carol Davis
+D008,LexCorp,Lex Luthor,Discovery,150000,Q3,2025-09-10,Bob Williams

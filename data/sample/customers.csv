@@ -1,0 +1,9 @@
+id,name,email,company,plan,mrr,created_at,status
+C001,John Smith,john.smith@acme.com,Acme Corp,Enterprise,10416,2023-01-15,active
+C002,Jane Doe,jane.doe@globex.com,Globex Inc,Pro,625,2023-03-22,active
+C003,Michael Scott,mscott@initech.com,Initech,Starter,125,2023-06-01,churned
+C004,Sarah Connor,sconnor@umbrella.com,Umbrella Corp,Enterprise,17500,2022-11-10,active
+C005,Tony Stark,tstark@stark.com,Stark Industries,Enterprise,41666,2022-05-01,active
+C006,Bruce Wayne,bwayne@wayne.com,Wayne Enterprises,Enterprise,26666,2023-02-14,active
+C007,Norman Osborn,nosborn@oscorp.com,Oscorp,Pro,733,2024-01-08,active
+C008,Lex Luthor,lluthor@lexcorp.com,LexCorp,Pro,1250,2024-03-15,trial
